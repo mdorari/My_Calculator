@@ -12,12 +12,20 @@ class CalculatorViewModel : ViewModel() {
     fun onAction(action: CalculatorAction) {
         when (action) {
             CalculatorAction.Calculate -> performCalculation()
-            CalculatorAction.Clear -> state = CalculatorState()
+            CalculatorAction.Clear -> performClarification()
             CalculatorAction.Decimal -> enterDecimal()
             CalculatorAction.Delete -> performDeletion()
             is CalculatorAction.Number -> enterNumber(action.number)
             is CalculatorAction.Operation -> enterOperation(action.operation)
         }
+    }
+
+    private fun performClarification() {
+        state = state.copy(
+            number1 = "",
+            number2 = "",
+            operation = null
+        )
     }
 
     private fun enterOperation(operation: CalculatorOperation) {
@@ -68,9 +76,9 @@ class CalculatorViewModel : ViewModel() {
             )
             return
         }
-        if (state.number1.isNotBlank() && state.operation == null && !state.number1.contains(".")) {
+        if (state.number2.isNotBlank() && state.operation != null && !state.number2.contains(".")) {
             state = state.copy(
-                number1 = state.number1 + "."
+                number2 = state.number2 + "."
             )
             return
         }
