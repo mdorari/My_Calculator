@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="text">#CDCFD5</color>
+    <color name="history">#A0A2A9</color>
+    <color name="button_grey">#222C3C</color>
+    <color name="app_background">#454C56</color>
+    <color name="button_orange">#FFFF9800</color>
+</resources>

@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import java.math.RoundingMode
 
 class CalculatorViewModel : ViewModel() {
     var state by mutableStateOf(CalculatorState())
@@ -17,7 +18,16 @@ class CalculatorViewModel : ViewModel() {
             CalculatorAction.Delete -> performDeletion()
             is CalculatorAction.Number -> enterNumber(action.number)
             is CalculatorAction.Operation -> enterOperation(action.operation)
+            is CalculatorAction.OnHistoryClick -> retrieveHistory(action.history)
+            CalculatorAction.OnLongPressOnHistory -> clearHistory()
         }
+    }
+
+    private fun clearHistory() {
+
+        state = state.copy(
+            history = mutableListOf()
+        )
     }
 
     private fun performClarification() {
@@ -108,17 +118,26 @@ class CalculatorViewModel : ViewModel() {
             }
             val history = state.history.toMutableList().apply {
                 add(
-                    number1.toString() + state.operation!!.symbol + number2.toString() + " = " + result.toString()
-                        .take(15)
+                    CalculationHistory(
+                        number1,number2,state.operation!!,result
+                    )
                 )
             }
             state = state.copy(
-                number1 = result.toString().take(15),
+                number1 = result.toBigDecimal().setScale(2,RoundingMode.CEILING).toString(),
                 number2 = "",
                 operation = null,
                 history = history
             )
         }
+    }
+
+    private fun retrieveHistory(history: CalculationHistory){
+        state = state.copy(
+            number1 = history.number1.toString(),
+            number2 = history.number2.toString(),
+            operation = history.operator,
+        )
     }
 
 
